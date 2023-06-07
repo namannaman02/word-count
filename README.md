@@ -2,6 +2,7 @@
 ## steps to run
 ### cd backend
 ### python3 App.py
-### cd ./../frontend
+## open another terminal window
+### cd frontend
 ### npm i
 ### npm run start
