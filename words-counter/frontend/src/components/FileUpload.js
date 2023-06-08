@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./FileUpload.css";
 
-const FileUpload = () => {
+const FileUpload = (props) => {
 	let counter = {};
 	const [
 		selectedFile,
@@ -19,6 +19,10 @@ const FileUpload = () => {
 		);
 	};
 
+	const handleLogout = () => {
+		props.onLogout(false);
+	};
+
 	const handleFileUpload = () => {
 		setLoading(true);
 		const formData = new FormData();
@@ -30,18 +34,13 @@ const FileUpload = () => {
 		axios
 			.post("/api/upload", formData)
 			.then((response) => {
-				// Handle the successful response from the backend
-				console.log(response.data);
 				counter = response.data;
-				console.log(counter);
 				setLoading(false);
 				setShowCounter(counter);
 			})
 
 			.catch((error) => {
-				// Handle the response error
 				if (error.response) {
-					// The request was made and the server responded with an error status
 					console.error(
 						"Response Error:",
 						error.response.data
@@ -55,13 +54,11 @@ const FileUpload = () => {
 						error.response.headers
 					);
 				} else if (error.request) {
-					// The request was made, but no response was received
 					console.error(
 						"Request Error:",
 						error.request
 					);
 				} else {
-					// Something happened in setting up the request that triggered an Error
 					console.error(
 						"Error:",
 						error.message
@@ -74,11 +71,21 @@ const FileUpload = () => {
 
 	return (
 		<div className="file-upload-container">
+			<div className="container-logout-button">
+				<button
+					className="logout-button"
+					onClick={handleLogout}
+				>
+					Logout
+				</button>
+			</div>
+
 			<input
 				className="file-upload-input"
 				type="file"
 				onChange={handleFileChange}
 			/>
+
 			<button
 				className="file-upload-button"
 				onClick={handleFileUpload}
@@ -93,7 +100,10 @@ const FileUpload = () => {
 				<div>
 					{Object.keys(showCounter).map(
 						(key) => (
-							<p className="file-upload-output">
+							<p
+								className="file-upload-output"
+								key={key}
+							>
 								{key} :{" "}
 								{showCounter[key]}
 							</p>
